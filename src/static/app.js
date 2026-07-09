@@ -18,16 +18,74 @@ document.addEventListener("DOMContentLoaded", () => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+        const participants = details.participants || [];
+        const spotsLeft = details.max_participants - participants.length;
+        const participantList = participants.length
+          ? `<div class="participants-list">${participants
+              .map(
+                (participant) => `
+                  <div class="participant-pill">
+                    <span class="participant-name">${participant}</span>
+                    <button
+                      type="button"
+                      class="participant-remove"
+                      data-activity="${name}"
+                      data-email="${participant}"
+                      aria-label="Remove ${participant} from ${name}"
+                    >
+                      ×
+                    </button>
+                  </div>
+                `
+              )
+              .join("")}</div>`
+          : '<p class="participants-empty">Be the first to sign up!</p>';
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <p><strong>Availability:</strong> <span class="availability-value">${spotsLeft} spots left</span></p>
+          <div class="participants-section">
+            <h5>Participants</h5>
+            ${participantList}
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
+
+        activityCard.querySelectorAll(".participant-remove").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const participantEmail = button.dataset.email;
+            const activityName = button.dataset.activity;
+            const pill = button.closest(".participant-pill");
+            const availabilityValue = activityCard.querySelector(".availability-value");
+
+            try {
+              const response = await fetch(
+                `/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(participantEmail)}`,
+                {
+                  method: "DELETE",
+                }
+              );
+
+              if (response.ok) {
+                pill?.remove();
+
+                const remainingParticipants = activityCard.querySelectorAll(".participant-pill").length;
+                const maxParticipants = details.max_participants;
+
+                if (availabilityValue) {
+                  availabilityValue.textContent = `${maxParticipants - remainingParticipants} spots left`;
+                }
+              } else {
+                console.error("Failed to unregister participant");
+              }
+            } catch (error) {
+              console.error("Error unregistering participant:", error);
+            }
+          });
+        });
 
         // Add option to select dropdown
         const option = document.createElement("option");
