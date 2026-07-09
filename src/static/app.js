@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 `
               )
               .join("")}</ul>`
-          : '<p class="participants-empty">Be the first to sign up!</p>';
+          : '<p class="participants-empty">No one has signed up yet — be the first!</p>';
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
