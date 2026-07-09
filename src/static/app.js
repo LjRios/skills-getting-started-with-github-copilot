@@ -32,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
                       class="participant-remove"
                       data-activity="${name}"
                       data-email="${participant}"
-                      aria-label="Remove ${participant} from ${name}"
+                      aria-label="Unregister ${participant} from ${name}"
+                      title="Unregister ${participant}"
                     >
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M9 3h6a1 1 0 0 1 1 1v1h4v2H4V5h4V4a1 1 0 0 1 1-1Zm-2 5h10l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L7 8Z" />
