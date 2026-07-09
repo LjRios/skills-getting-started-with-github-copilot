@@ -93,6 +93,8 @@ section h3 {
   flex-wrap: wrap;
   gap: 8px;
   padding: 0;
+  list-style: none;
+  margin: 0;
 }
 
 .participant-pill {
@@ -116,17 +118,21 @@ section h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border: none;
   border-radius: 50%;
   background-color: #bfdbfe;
   color: #1d4ed8;
   cursor: pointer;
-  font-size: 0.9rem;
-  line-height: 1;
   padding: 0;
   transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.participant-remove svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
 }
 
 .participant-remove:hover {

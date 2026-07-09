@@ -10,8 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("/activities");
       const activities = await response.json();
 
-      // Clear loading message
+      // Clear loading message and any previous options
       activitiesList.innerHTML = "";
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -21,10 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const participants = details.participants || [];
         const spotsLeft = details.max_participants - participants.length;
         const participantList = participants.length
-          ? `<div class="participants-list">${participants
+          ? `<ul class="participants-list">${participants
               .map(
                 (participant) => `
-                  <div class="participant-pill">
+                  <li class="participant-pill">
                     <span class="participant-name">${participant}</span>
                     <button
                       type="button"
@@ -33,12 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
                       data-email="${participant}"
                       aria-label="Remove ${participant} from ${name}"
                     >
-                      ×
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 3h6a1 1 0 0 1 1 1v1h4v2H4V5h4V4a1 1 0 0 1 1-1Zm-2 5h10l-1 12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L7 8Z" />
+                      </svg>
                     </button>
-                  </div>
+                  </li>
                 `
               )
-              .join("")}</div>`
+              .join("")}</ul>`
           : '<p class="participants-empty">Be the first to sign up!</p>';
 
         activityCard.innerHTML = `
@@ -117,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const result = await response.json();
 
       if (response.ok) {
+        await fetchActivities();
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
